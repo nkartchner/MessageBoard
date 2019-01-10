@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/css/index.css">
+    <script type="text/javascript" src="/js/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="/js/script.js"></script>
+
+    <title>Quoting Dojo</title>
+</head>
+
+<body>
+    <div class='container'>
+        <!------------------------------------------------------------- ERROR MESSAGES -------------------------------------------------------------->
+        <% if(messages.registration) { %>
+            <div class="alert-success block-message error" style="color:red">
+            <% for (var x of messages.registration) { %>
+            <h3>
+                <%= x %>
+            </h3>
+            <% } %>
+            </div>
+        <% } %>
+
+        <!------------------------------------------------------------- HEADER -------------------------------------------------------------->
+        <header>
+            <h1>the Dojo Message Board</h1>
+        </header>
+        <!------------------------------------------------------------- MAIN MESSAGE BOARD -------------------------------------------------------------->
+        <main>
+            <!------------------------------------------------------------- NEW MESSAGE FORM -------------------------------------------------------------->
+            <form action='/message' method="POST">
+                <h2 class="post_msg">Post a message</h2>
+                <label for="name" id="lblName">Name:</label>
+                <input type="text" name="name" id="msgInputBox">
+                <textarea class="send_box" name='content'></textarea>
+                <button type="submit" class='btn btn-outline-primary msg_submit'>Submit</button>
+            </form>
+
+            <!------------------------------------------------------------- ALL MESSAGES -------------------------------------------------------------->
+            <section class="content">
+                <% for (var message of data ){ %>
+
+                <!-------------------------- DELETE MESSAGE / DISPLAY MESSAGE -------------------------->
+                <form class="messages" action="/destroy/<%= message._id %>" method="POST">
+                    <!-- <a class="btn btn-outline-danger delete_message" href="/delete_msg/<%=  %>"><img src="images/si-glyph-trash.svg" /></a> -->
+                    <button type="submit" class="btn btn-outline-danger delete_message"><img src="/images/si-glyph-trash.svg" /></button>
+                    <h4 class="msgName">Name:
+                        <%= message.name %>
+                    </h4>
+                    <p class="form-control-plaintext msg_txt">
+                        <%= message.content %>
+                    </p>
+                </form>
+
+                <!-------------------------- COMMENT CONTENT -------------------------->
+                <% for (var comment of message.comments){ %>
+                <section class='comment'>
+                    <span class="cmnt_user_h4">
+                        <%= comment.name %> </span>
+                    <p class="form-control-plaintext cmnt_txt">
+                        <%= comment.content %>
+                    </p>
+                </section>
+                <% } %>
+
+                <!-------------------------- NEW COMMENT -------------------------->
+                <form class="comment" action="/comment" method="POST">
+                    <input type="hidden" name="message" value="<%= message._id %>">
+                    <p class="cmnt_h4">Post a comment</p>
+                    <label for="name">Name:</label>
+                    <input type="text" name="name" class="">
+                    <textarea class="post_cmnt" name="cmnt"></textarea>
+                    <button type='submit' class="btn btn-success cmnt_btn">Submit</button>
+                </form>
+
+                <% } %>
+
+
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>
